@@ -1,5 +1,14 @@
 from datetime import datetime, timedelta
 
+from django.db import transaction
+from django.http import HttpResponseNotFound
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from Backend_IngSoft.api.serializers import (
     AcquistoSerializer,
     AutoUsataSerializer,
@@ -32,16 +41,11 @@ from Backend_IngSoft.models import (
     Utente,
 )
 from Backend_IngSoft.util.util import create_pdf_file, send_html_email
-from django.db import transaction
-from django.http import HttpResponseNotFound
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 
 class UtenteListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     @swagger_auto_schema(
         responses={200: UtenteSerializer},
         operation_description="Ritorna tutti gli utenti",
@@ -64,6 +68,8 @@ class UtenteListAPIView(APIView):
 
 
 class UtenteDetailAPIView(APIView):
+    permission_classes = []
+
     @staticmethod
     def get_object(email):
         return Utente.objects.get(email=email)
@@ -142,6 +148,8 @@ class UtenteDetailAPIView(APIView):
 
 
 class ModelliAutoListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutti i modelli di auto",
         responses={200: ModelliAutoSerializer},
@@ -153,6 +161,8 @@ class ModelliAutoListAPIView(APIView):
 
 
 class OptionalAutoListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutti i modelli di auto",
         manual_parameters=[
@@ -176,6 +186,8 @@ class OptionalAutoListAPIView(APIView):
 
 
 class OptionalsListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutti i modelli di auto",
         responses={200: OptionalSerializer},
@@ -187,6 +199,8 @@ class OptionalsListAPIView(APIView):
 
 
 class ConcessionarioListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutti i concessionari",
         responses={200: ConcessionarioSerializer},
@@ -198,6 +212,8 @@ class ConcessionarioListAPIView(APIView):
 
 
 class PreventiviUtenteListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutti i preventivi di un utente",
         manual_parameters=[
@@ -345,6 +361,8 @@ class PreventiviUtenteListAPIView(APIView):
 
 
 class AcquistoUtenteListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutti gli acquisti di un utente",
         manual_parameters=[
@@ -370,6 +388,8 @@ class AcquistoUtenteListAPIView(APIView):
 
 
 class AutoUsateListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutte le auto usate",
         responses={200: AutoUsataSerializer},
@@ -439,6 +459,8 @@ class AutoUsateListAPIView(APIView):
 
 
 class ImmaginiAutoNuoveListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutte le immagini dei modelli nuovi",
         responses={200: ImmaginiAutoNuoveSerializer},
@@ -450,6 +472,8 @@ class ImmaginiAutoNuoveListAPIView(APIView):
 
 
 class PreventiviListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutti i preventivi",
         responses={200: PreventivoSerializer},
@@ -461,6 +485,8 @@ class PreventiviListAPIView(APIView):
 
 
 class PreventivoAutoUsateAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutti i preventivi di un utente",
         responses={200: PreventiviAutoUsateSerializer},
@@ -472,6 +498,8 @@ class PreventivoAutoUsateAPIView(APIView):
 
 
 class ImmaginiAutoUsateListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutte le immagini di un auto usata",
         responses={200: ImmaginiAutoUsateSerializer, 404: "Auto non esiste"},
@@ -519,6 +547,8 @@ class ImmaginiAutoUsateListAPIView(APIView):
 
 
 class ConfermaPreventivoUtenteAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Conferma un preventivo di un utente, genera la fattura e "
         "la invia all'utente insieme alla conferma dell'avvenuta "
@@ -628,6 +658,8 @@ class ConfermaPreventivoUtenteAPIView(APIView):
 
 
 class DetrazioneListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutte le detrazioni relative ad un utente",
         responses={200: DetrazioneSerializer, 404: "Preventivo non trovato"},
@@ -651,6 +683,8 @@ class DetrazioneListAPIView(APIView):
 
 
 class AutoUsateComprate(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutte le auto usate comprate da un utente",
         responses={
@@ -705,6 +739,8 @@ class AutoUsateComprate(APIView):
 
 
 class ScontiListAPIView(APIView):
+    permission_classes = []
+
     @swagger_auto_schema(
         operation_description="Ritorna tutti i sconti relativi ad un modello",
         responses={

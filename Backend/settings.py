@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -48,10 +49,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "Backend_IngSoft.apps.BackendIngsoftConfig",
+    "Backend_IngSoft.apps.BackendIngsoftConfig",  # mia app
     "django_extensions",  # serve per il grafico del db
-    "drf_extra_fields",
+    "drf_extra_fields",  # campi addizionali per i serializers
     "drf_yasg",  # documentazione delle api
+    "rest_framework_simplejwt",  # token JWT di autenticazione
 ]
 
 MIDDLEWARE = [
@@ -149,8 +151,93 @@ UNFOLD = {
     "THEME": "dark",
     "SHOW_VIEW_ON_SITE": False,
     "SIDEBAR": {
-        "show_search": True,
-        "show_all_application": True,
+        "navigation": [
+            {
+                "title": _("Gestione Personale"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Utenti"),
+                        "icon": "manage_accounts",
+                        "link": reverse_lazy("admin:auth_user_changelist"),
+                        "permissions": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Gruppi"),
+                        "icon": "group",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                        "permissions": lambda request: request.user.is_superuser,
+                    },
+                ],
+            },
+            {
+                "title": _("Utenti"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Clienti"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:Backend_IngSoft_utente_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Concessionari"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Concessionari"),
+                        "icon": "add_business",
+                        "link": reverse_lazy(
+                            "admin:Backend_IngSoft_concessionario_changelist"
+                        ),
+                    },
+                ],
+            },
+            {
+                "title": _("Gestione"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Modello Auto"),
+                        "icon": "drive_eta",
+                        "link": reverse_lazy(
+                            "admin:Backend_IngSoft_modelloauto_changelist"
+                        ),
+                    },
+                    {
+                        "title": _("Optional"),
+                        "icon": "build",
+                        "link": reverse_lazy(
+                            "admin:Backend_IngSoft_optional_changelist"
+                        ),
+                    },
+                    {
+                        "title": _("Sconti"),
+                        "icon": "percent",
+                        "link": reverse_lazy("admin:Backend_IngSoft_sconto_changelist"),
+                    },
+                    {
+                        "title": _("Preventivi"),
+                        "icon": "request_quote",
+                        "link": reverse_lazy(
+                            "admin:Backend_IngSoft_preventivo_changelist"
+                        ),
+                    },
+                    {
+                        "title": _("Auto Usate"),
+                        "icon": "drive_eta",
+                        "link": reverse_lazy(
+                            "admin:Backend_IngSoft_autousata_changelist"
+                        ),
+                    },
+                ],
+            },
+        ],
     },
 }
 
@@ -197,3 +284,15 @@ LOGGING = {
         },
     },
 }
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+}
+
+AUTHENTICATION_BACKENDS = (
+    "Backend_IngSoft.auth_backend.ApiUserBackend",
+    "django.contrib.auth.backends.ModelBackend",
+)

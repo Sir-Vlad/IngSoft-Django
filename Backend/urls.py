@@ -38,7 +38,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path("api/", include("Backend_IngSoft.api.urls")),
+    path("api/", include(("Backend_IngSoft.api.urls", "api"), namespace="api")),
     path("admin/", admin.site.urls),
     re_path(r"^$", lambda request: redirect("admin/")),  # redirect to admin
     re_path(

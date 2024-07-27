@@ -1,3 +1,5 @@
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from Backend_IngSoft.api.views import (
     AutoUsateComprate,
     AcquistoUtenteListAPIView,
@@ -20,6 +22,9 @@ from Backend_IngSoft.api.views import (
 from django.urls import path
 
 urlpatterns = [
+    # endpoint per i token
+    path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     # endpoint per la lista dei dati
     path("utenti/", UtenteListAPIView.as_view(), name="utente-list"),
     path("modelli/", ModelliAutoListAPIView.as_view(), name="modelli-list"),

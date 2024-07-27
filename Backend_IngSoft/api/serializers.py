@@ -1,6 +1,9 @@
 import base64
 from io import BytesIO
 
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from Backend_IngSoft.models import (
     Acquisto,
     AutoUsata,

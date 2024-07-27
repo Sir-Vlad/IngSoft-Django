@@ -39,9 +39,18 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     pass
 
 
+class GroupAdminForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = "__all__"
+        widgets = {
+            "permissions": forms.CheckboxSelectMultiple,
+        }
+
+
 @admin.register(Group)
 class GroupAdmin(ModelAdmin):
-    pass
+    form = GroupAdminForm
 
 
 @admin.register(Utente)
@@ -146,7 +155,7 @@ class OptionalAdmin(ModelAdmin):
 
 
 class PrezzoAutoUsataFilter(admin.SimpleListFilter):
-    title = "prezzo"
+    title = "Validazione Auto Usata"
     parameter_name = "prezzo"
 
     def lookups(self, request, model_admin):
